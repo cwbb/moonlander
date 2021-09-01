@@ -27,7 +27,9 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 public class PlayerRocket {
     
 	private final int SOUND_CRASH = 1; // crash sound flag
-	
+
+	private int SOUND_CHEER;
+    	
     /**
      * We use this to generate a random number for starting x coordinate of the rocket.
      */
@@ -171,19 +173,19 @@ public class PlayerRocket {
     public void Update()
     {
         // Calculating speed for moving up or down.
-        if(Canvas.keyboardKeyState(KeyEvent.VK_W))
+        if(Canvas.keyboardKeyState(KeyEvent.VK_UP))
             speedY -= speedAccelerating;
         else
             speedY += speedStopping;
         
         // Calculating speed for moving or stopping to the left.
-        if(Canvas.keyboardKeyState(KeyEvent.VK_A))
+        if(Canvas.keyboardKeyState(KeyEvent.VK_LEFT))
             speedX -= speedAccelerating;
         else if(speedX < 0)
             speedX += speedStopping;
         
         // Calculating speed for moving or stopping to the right.
-        if(Canvas.keyboardKeyState(KeyEvent.VK_D))
+        if(Canvas.keyboardKeyState(KeyEvent.VK_RIGHT))
             speedX += speedAccelerating;
         else if(speedX > 0)
             speedX -= speedStopping;
@@ -202,6 +204,7 @@ public class PlayerRocket {
         if(landed)
         {
             g2d.drawImage(rocketLandedImg, x, y, null);
+            crowdCheer();
         }
         // If the rocket is crashed.
         else if(crashed)
@@ -217,7 +220,7 @@ public class PlayerRocket {
         else
         {
             // If player hold down a W key we draw rocket fire.
-            if(Canvas.keyboardKeyState(KeyEvent.VK_W))
+            if(Canvas.keyboardKeyState(KeyEvent.VK_UP))
                 g2d.drawImage(rocketFireImg, x + 12, y + 66, null);
             g2d.drawImage(rocketImg, x, y, null);
         }
@@ -264,5 +267,31 @@ public class PlayerRocket {
 			e.printStackTrace();
 		}
 	}
-    
+	public void crowdCheer() {
+		String fn = null;
+		File sound;
+		try {
+			fn = "./src/moon_lander/resources/sounds/cheer.mp3";
+			sound = new File(fn);
+			AudioInputStream audioIn = AudioSystem.getAudioInputStream(sound);
+			Clip clip = AudioSystem.getClip();
+			// Open audio clip and load samples from the audio input stream.
+			clip.open(audioIn);
+			clip.start();
+		}
+		catch
+			 (UnsupportedAudioFileException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (LineUnavailableException e) {
+					e.printStackTrace();
+				} catch (Throwable e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		
+		
+	 
+}
 }
